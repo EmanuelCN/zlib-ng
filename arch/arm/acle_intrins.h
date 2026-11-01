@@ -11,6 +11,13 @@
 #ifdef ARM_CRC32
 #if defined(ARCH_ARM) && defined(ARCH_64BIT)
 #  define Z_TARGET_CRC Z_TARGET("+crc")
+#elif defined(ARCH_ARM) && defined(ARCH_32BIT) && defined(__clang__) && !defined(__ARM_FEATURE_CRC32)
+/* 32-bit ARM with an ARMv7-A baseline (e.g. Android's armeabi-v7a): clang does not expose the CRC32
+ * intrinsics from arm_acle.h and its integrated assembler rejects the instructions unless the CRC feature
+ * is enabled. Enable it per function rather than per module (this keeps LTO happy) and map the intrinsics
+ * to the compiler builtins. The caller is expected to have checked HWCAP2_CRC32 at runtime. */
+#  define Z_TARGET_CRC Z_TARGET("armv8-a,crc")
+#  define ARM_CRC32_CLANG_BUILTINS
 #else
 #  define Z_TARGET_CRC
 #endif
@@ -20,7 +27,12 @@
 #  define Z_TARGET_PMULL_EOR3
 #endif
 
-#if !defined(ARM_CRC32_INTRIN) && !defined(_MSC_VER)
+#if defined(ARM_CRC32_CLANG_BUILTINS)
+#  define __crc32b __builtin_arm_crc32b
+#  define __crc32h __builtin_arm_crc32h
+#  define __crc32w __builtin_arm_crc32w
+#  define __crc32d __builtin_arm_crc32d
+#elif !defined(ARM_CRC32_INTRIN) && !defined(_MSC_VER)
 #if defined(ARCH_ARM) && defined(ARCH_64BIT)
 static inline uint32_t __crc32b(uint32_t __a, uint8_t __b) {
     uint32_t __c;

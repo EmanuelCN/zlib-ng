@@ -1,0 +1,18 @@
+name: "zlib-ng"
+description:
+    "zlib-ng is a zlib replacement that provides optimizations for modern "
+    "systems, built here in zlib-compat mode."
+
+third_party {
+  url {
+    type: GIT
+    value: "https://github.com/zlib-ng/zlib-ng"
+  }
+  version: "b46eb46842ba89970134e4c4895094779f323ad8"
+  license_type: NOTICE
+  last_upgrade_date {
+    year: 2026
+    month: 11
+    day: 1
+  }
+}

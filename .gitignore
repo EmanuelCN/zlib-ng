@@ -110,3 +110,6 @@ RelWithDebInfo
 # Test datasets
 test/data/corpora/
 test/data/local/
+
+# Android: pre-generated compat headers are checked in (android/gen-headers.sh)
+!/android/include/*.h
