@@ -32,7 +32,8 @@
 #  define __crc32h __builtin_arm_crc32h
 #  define __crc32w __builtin_arm_crc32w
 #  define __crc32d __builtin_arm_crc32d
-#elif !defined(ARM_CRC32_INTRIN) && !defined(_MSC_VER)
+#elif !defined(ARM_CRC32_INTRIN) && !defined(_MSC_VER) && \
+      !(defined(HAVE_ARM_ACLE_H) && defined(__ARM_FEATURE_CRC32))
 #if defined(ARCH_ARM) && defined(ARCH_64BIT)
 static inline uint32_t __crc32b(uint32_t __a, uint8_t __b) {
     uint32_t __c;
