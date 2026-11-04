@@ -44,12 +44,16 @@ static inline uint32_t vaddvq_u32(uint32x4_t a) {
 /* Clang versions before 20 have too strict of an
  * alignment requirement (:256) for x4 NEON intrinsics */
 #    undef ARM_NEON_HASLD4
-#    undef vld1q_u16_x4
-#    undef vld1q_u8_x4
-#    undef vst1q_u16_x4
 #  endif
 
 #  ifndef ARM_NEON_HASLD4
+/*
+ * Undefine x4 intrinsics that may be defined as macros in system headers
+ * (e.g., arm_neon.h in Clang 20+) to avoid conflicts with our inline functions.
+ */
+#    undef vld1q_u16_x4
+#    undef vld1q_u8_x4
+#    undef vst1q_u16_x4
 
 static inline uint16x8x4_t vld1q_u16_x4(uint16_t const *a) {
     uint16x8x4_t ret;

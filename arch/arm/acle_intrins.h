@@ -34,6 +34,14 @@
 #  define __crc32d __builtin_arm_crc32d
 #elif !defined(ARM_CRC32_INTRIN) && !defined(_MSC_VER)
 #if defined(ARCH_ARM) && defined(ARCH_64BIT)
+/*
+ * Undefine CRC32 intrinsics that may be defined as macros in system headers
+ * (e.g., arm_acle.h in Clang 20+) to avoid conflicts with our inline functions.
+ */
+#    undef __crc32b
+#    undef __crc32h
+#    undef __crc32w
+#    undef __crc32d
 static inline uint32_t __crc32b(uint32_t __a, uint8_t __b) {
     uint32_t __c;
     __asm__("crc32b %w0, %w1, %w2" : "=r" (__c) : "r"(__a), "r"(__b));
@@ -58,6 +66,14 @@ static inline uint32_t __crc32d(uint32_t __a, uint64_t __b) {
     return __c;
 }
 #else
+/*
+ * Undefine CRC32 intrinsics that may be defined as macros in system headers
+ * (e.g., arm_acle.h in Clang 20+) to avoid conflicts with our inline functions.
+ */
+#    undef __crc32b
+#    undef __crc32h
+#    undef __crc32w
+#    undef __crc32d
 static inline uint32_t __crc32b(uint32_t __a, uint8_t __b) {
     uint32_t __c;
     __asm__("crc32b %0, %1, %2" : "=r" (__c) : "r"(__a), "r"(__b));
